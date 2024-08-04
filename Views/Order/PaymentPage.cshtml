@@ -1,0 +1,70 @@
+﻿@model Order
+
+<h1>Payment Page</h1>
+
+<h3>Order @Model.OrderNumber</h3>
+<ul>
+    @foreach (var item in Model.OrderItems)
+    {
+        <li>@item.Product.ProductName - @item.Quantity x ₹ @item.Price.ToString("N2")</li>
+    }
+</ul>
+<p>Total Price: ₹ @Model.TotalPrice.ToString("N2")</p>
+
+<h2>Choose Payment Option</h2>
+<form id="paymentForm">
+    <div>
+        <label>
+            <input type="radio" name="paymentMethod" value="Gpay" /> Gpay
+        </label>
+    </div>
+    <div>
+        <label>
+            <input type="radio" name="paymentMethod" value="PhonePe" /> PhonePe
+        </label>
+    </div>
+    <div>
+        <label>
+            <input type="radio" name="paymentMethod" value="Paytm" /> Paytm
+        </label>
+    </div>
+    <div>
+        <label>
+            <input type="radio" name="paymentMethod" value="CreditCard" /> Credit Card
+        </label>
+    </div>
+    <div>
+        <label>
+            <input type="radio" name="paymentMethod" value="DebitCard" /> Debit Card
+        </label>
+    </div>
+    <div>
+        <label>
+            <input type="radio" name="paymentMethod" value="RupayCard" /> Rupay Card
+        </label>
+    </div>
+    <div>
+        <label>
+            <input type="radio" name="paymentMethod" value="COD" /> Cash on Delivery
+        </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Place Order</button>
+</form>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#paymentForm").on("submit", function (e) {
+            e.preventDefault();
+
+            var paymentMethod = $("input[name='paymentMethod']:checked").val();
+            if (!paymentMethod) {
+                alert("Please select a payment method.");
+                return;
+            }
+
+            alert("Order placed successfully");
+            window.location.href = "/Product/ProductsList";
+        });
+    });
+</script>

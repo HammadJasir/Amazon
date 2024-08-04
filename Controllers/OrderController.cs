@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UPC_DropDown.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 public class OrderController : Controller
 {
@@ -77,6 +74,7 @@ public class OrderController : Controller
             return Json(new { success = false, message = errorMessage });
         }
     }
+
     [HttpPost]
     public IActionResult DeleteOrder(int orderId)
     {
@@ -105,15 +103,26 @@ public class OrderController : Controller
             return Json(new { success = false, message = errorMessage });
         }
     }
+
     [HttpPost]
-    public IActionResult Checkout()
+    public IActionResult Checkout(int orderId)
     {
         try
         {
-            // Your order checkout logic here
-            // This could include updating order status, processing payment, etc.
+            // Find the order based on orderId
+            var order = _db.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
+                                  .FirstOrDefault(o => o.OrderId == orderId);
 
-            return Json(new { success = true });
+            if (order == null)
+            {
+                return Json(new { success = false, message = "Order not found." });
+            }
+
+            // Assuming some logic to update order status, etc.
+            // Here you can update the order's status or perform other necessary operations
+
+            // Redirect to PaymentPage with orderId
+            return Json(new { success = true, redirectUrl = Url.Action("PaymentPage", new { orderId }) });
         }
         catch (Exception ex)
         {
@@ -130,6 +139,18 @@ public class OrderController : Controller
 
     public IActionResult ThankYou()
     {
-        return View(ThankYou);
+        return View();
+    }
+
+    public IActionResult PaymentPage(int orderId)
+    {
+        // Retrieve the order based on orderId
+        var order = _db.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
+                              .FirstOrDefault(o => o.OrderId == orderId);
+        if (order == null)
+        {
+            return NotFound();
+        }
+        return View(order);
     }
 }
