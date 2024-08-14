@@ -1,32 +1,13 @@
-﻿@{
-    ViewData["Title"] = "Thank You";
-}
-<html>
-<head>
-    <style>
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 80%; /* Adjust as necessary */
-            width: 100%;
-           
-        }
+﻿@model Order
 
-        .centered {
-            text-align: center; /* Optional: center the text inside the div */
-            margin-top:30%;
-        }
-
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="centered">
-            <h1>Your order has been placed successfully.</h1>
-            <h2>Thank You for Shopping with us!</h2>
-        </div>
-    </div>
-    
-</body>
-</html>
+<center>
+    <h1>Thank you for placing the order</h1>
+    @if (Model != null)
+    {
+        <a href="@Url.Action("DownloadPdf", new { orderId = Model.OrderId })" class="btn btn-success mb-3">Download Orders Pdf</a>
+    }
+    else
+    {
+        <p>Order not found.</p>
+    }
+</center>

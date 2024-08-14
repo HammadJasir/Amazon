@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
 using UPC_DropDown.Models;
 
 public class OrderController : Controller
@@ -105,11 +107,11 @@ public class OrderController : Controller
     }
 
     [HttpPost]
+    [HttpPost]
     public IActionResult Checkout(int orderId)
     {
         try
         {
-            // Find the order based on orderId
             var order = _db.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
                                   .FirstOrDefault(o => o.OrderId == orderId);
 
@@ -118,11 +120,10 @@ public class OrderController : Controller
                 return Json(new { success = false, message = "Order not found." });
             }
 
-            // Assuming some logic to update order status, etc.
-            // Here you can update the order's status or perform other necessary operations
+            // Additional logic (e.g., updating order status)
 
-            // Redirect to PaymentPage with orderId
-            return Json(new { success = true, redirectUrl = Url.Action("PaymentPage", new { orderId }) });
+            // Redirect to ThankYou page with the orderId
+            return Json(new { success = true, redirectUrl = Url.Action("ThankYou", new { orderId }) });
         }
         catch (Exception ex)
         {
@@ -137,10 +138,19 @@ public class OrderController : Controller
         }
     }
 
-    public IActionResult ThankYou()
+    public IActionResult ThankYou(int orderId)
     {
-        return View();
+        var order = _db.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
+                              .FirstOrDefault(o => o.OrderId == orderId);
+
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        return View(order);
     }
+
 
     public IActionResult PaymentPage(int orderId)
     {
@@ -153,4 +163,43 @@ public class OrderController : Controller
         }
         return View(order);
     }
+
+    public IActionResult DownloadPdf(int orderId)
+    {
+        // Retrieve the order based on orderId
+        var order = _db.Orders.Include(o => o.OrderItems).ThenInclude(oi => oi.Product)
+                              .FirstOrDefault(o => o.OrderId == orderId);
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        // Create PDF document
+        using (var stream = new MemoryStream())
+        {
+            var document = new PdfDocument();
+            var page = document.AddPage();
+            var gfx = XGraphics.FromPdfPage(page);
+            var font = new XFont("Verdana", 12, XFontStyle.Regular);
+
+            // Write order details
+            gfx.DrawString($"Order ID: {order.OrderId}", font, XBrushes.Black, new XRect(20, 20, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString($"Order Number: {order.OrderNumber}", font, XBrushes.Black, new XRect(20, 40, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString($"Order Date: {order.OrderDate.ToString("yyyy-MM-dd HH:mm")}", font, XBrushes.Black, new XRect(20, 60, page.Width, page.Height), XStringFormats.TopLeft);
+            gfx.DrawString($"Total Price: ₹ {order.TotalPrice.ToString("N2")}", font, XBrushes.Black, new XRect(20, 80, page.Width, page.Height), XStringFormats.TopLeft);
+
+            // Write order items
+            int yPosition = 120;
+            foreach (var item in order.OrderItems)
+            {
+                gfx.DrawString($"{item.Product.ProductName} - {item.Quantity} x ₹ {item.Price.ToString("N2")}", font, XBrushes.Black, new XRect(20, yPosition, page.Width, page.Height), XStringFormats.TopLeft);
+                yPosition += 20;
+            }
+
+            document.Save(stream, false);
+            var fileName = $"Order_{order.OrderNumber}.pdf";
+            return File(stream.ToArray(), "application/pdf", fileName);
+        }
+    }
 }
+
