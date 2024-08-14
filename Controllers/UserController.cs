@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using UPC_DropDown.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ClosedXML.Excel;
 
 public class UserController : Controller
 {
@@ -37,6 +38,42 @@ public class UserController : Controller
         {
             SqlParameter param = new SqlParameter("@p0", keyword);
             return await _db.Users.FromSqlRaw("EXEC SearchUsers @p0", param).ToListAsync();
+        }
+    }
+
+    public async Task<IActionResult> ExportToExcel()
+    {
+        var users = await _db.Users.ToListAsync();
+
+        using (var workbook = new XLWorkbook())
+        {
+            var worksheet = workbook.Worksheets.Add("Users");
+            var currentRow = 1;
+
+            // Header row
+            worksheet.Cell(currentRow, 1).Value = "User ID";
+            worksheet.Cell(currentRow, 2).Value = "User Name";
+            worksheet.Cell(currentRow, 3).Value = "User Password";
+            worksheet.Cell(currentRow, 4).Value = "User Email";
+            worksheet.Cell(currentRow, 5).Value = "Salary";
+
+            // Data rows
+            foreach (var user in users)
+            {
+                currentRow++;
+                worksheet.Cell(currentRow, 1).Value = user.UserID;
+                worksheet.Cell(currentRow, 2).Value = user.UserName;
+                worksheet.Cell(currentRow, 3).Value = user.UserPassword;
+                worksheet.Cell(currentRow, 4).Value = user.UserEmail;
+                worksheet.Cell(currentRow, 5).Value = user.Salary;
+            }
+
+            using (var stream = new MemoryStream())
+            {
+                workbook.SaveAs(stream);
+                var content = stream.ToArray();
+                return File(content, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Users.xlsx");
+            }
         }
     }
 }
