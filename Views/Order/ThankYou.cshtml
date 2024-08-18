@@ -6,8 +6,10 @@
     @if (Model != null)
     {
         <br />
-        <center>
-        <a href="@Url.Action("DownloadPdf", new { orderId = Model.OrderId })" class="btn btn-success mb-3">Download Orders Pdf</a>
+        <center>@* 
+        <a href="@Url.Action("DownloadPdf", new { orderId = Model.OrderId })" class="btn btn-success mb-3">Download Orders Pdf</a> *@
+
+                <a class="btn btn-primary" asp-controller="Order" asp-action="InvoiceList" asp-route-orderId="@Model.OrderId">View Invoice</a>
             </center>
     }
     else
