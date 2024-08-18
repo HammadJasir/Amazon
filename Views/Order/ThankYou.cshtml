@@ -1,13 +1,19 @@
 ﻿@model Order
 
-<center>
-    <h1>Thank you for placing the order</h1>
+<div style="align-content:center;justify-content:center;display:flex; margin-top:20%" class="container">
+  <div class="centered">
+     <h1>Thank you for placing the order!</h1>
     @if (Model != null)
     {
+        <br />
+        <center>
         <a href="@Url.Action("DownloadPdf", new { orderId = Model.OrderId })" class="btn btn-success mb-3">Download Orders Pdf</a>
+            </center>
     }
     else
     {
         <p>Order not found.</p>
     }
-</center>
+   </div>
+
+</div>

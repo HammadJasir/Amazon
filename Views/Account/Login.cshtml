@@ -17,10 +17,12 @@
             font-family: 'Arial', sans-serif;
             background: linear-gradient(to right, #ff7e5f, #feb47b); /* Background gradient */
             min-height: 100vh;                                           /* to set the height, 1vh =1%, vh = viewport height */
-            display: flex;                                               /* to display flex in my view body */
-            align-items: center;                                         /* to align them in center */
+            display: flex;                                                /* to display flex in my view body */
+            align-content: center;                                         /* to align them in center */
             justify-content: center;                                     /* to set the content in center */
-            overflow: hidden;                                            /* prevent unwanted horizontal scrolling  */
+            overflow: hidden;
+            margin-left:35%;
+            margin-top:10%                                                             /* prevent unwanted horizontal scrolling  */
         }
 
         .login-container {
@@ -60,8 +62,9 @@
         }
     </style>
 </head>
-<body>
-    <div class="login-container">
+<body >
+    <div class="login-container" >
+       
         <h1>Log In</h1>
         <div asp-validation-summary="ModelOnly" class="errorMsg mb-4"></div>
         <form asp-action="SubmitLogin" method="post">
@@ -82,6 +85,7 @@
                 <a href="@Url.Action("RegisterForm", "Account")" class="btn btn-secondary btn-block">Register</a>
             </div>
         </form>
+       
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

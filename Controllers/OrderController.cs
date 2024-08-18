@@ -107,7 +107,6 @@ public class OrderController : Controller
     }
 
     [HttpPost]
-    [HttpPost]
     public IActionResult Checkout(int orderId)
     {
         try
