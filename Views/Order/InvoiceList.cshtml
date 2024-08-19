@@ -45,29 +45,22 @@
 
         .invoice-total {
             display: flex;
-            justify-content: space-between;
+            justify-content:right;
             align-items: center;
             margin-top: 10px;
             font-weight: bold;
+
         }
 
-        .danger-button {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="invoice-header">
-            <div class="logo">
-                <img src="~/css/Amazon.JPG" alt="Company Logo" />
+            <div class="logo" >
+                <img style="margin-top:10%" src="~/css/amazonlogo.jpg" alt="Company Logo" />
             </div>
-            <div class="date-time">
+            <div class="date-time" style="margin-right:8%" >
                 @DateTime.Now.ToString("MMMM dd, yyyy - HH:mm:ss")
             </div>
         </div>
@@ -108,13 +101,18 @@
                 }
             </tbody>
         </table>
-
+        
         <div class="invoice-total">
-            <span>Grand Total: ₹ @Model.Order.TotalPrice.ToString("N2")</span>
-            <form method="post" action="@Url.Action("DownloadInvoice", new { orderId = Model.Order.OrderId })" style="display:inline;">
-                <button type="submit" class="danger-button">Print</button>
-            </form>
+            <span style="margin-right:6%">Grand Total: ₹ @Model.Order.TotalPrice.ToString("N2")</span>
         </div>
+
+            <form method="post" action="@Url.Action("DownloadInvoice", new { orderId = Model.Order.OrderId })" style="display:inline;">
+                <div style="text-align: center; margin-top: 20px;">
+                    <!-- Updated the style to center the button -->
+                    <button type="submit" class="btn btn-danger">Print</button>
+                </div>
+            </form>
+
     </div>
 </body>
 </html>

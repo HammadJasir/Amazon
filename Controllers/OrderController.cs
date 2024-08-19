@@ -234,7 +234,7 @@ public class OrderController : Controller
                             new XRect(0, yMargin + 40, page.Width, 0), XStringFormats.TopCenter);
 
                         // Add company logo below the invoice title
-                        string logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "css", "Amazon.JPG ");
+                        string logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "css", "amazonlogo.jpg");
                         if (System.IO.File.Exists(logoPath))
                         {
                             XImage logo = XImage.FromFile(logoPath);
@@ -248,13 +248,13 @@ public class OrderController : Controller
 
                         // Add user details on the right side parallel to the logo
                         gfx.DrawString($"Name: {viewModel.UserName}", font, XBrushes.Black,
-                            new XRect(page.Width - 400, yMargin + 80, 300, 0), XStringFormats.TopRight);
+                            new XRect(page.Width - 459, yMargin + 80, 300, 0), XStringFormats.TopRight);
                         gfx.DrawString($"Address: {viewModel.UserAddress}", font, XBrushes.Black,
-                            new XRect(page.Width - 400, yMargin + 100, 300, 0), XStringFormats.TopRight);
+                            new XRect(page.Width - 350, yMargin + 100, 300, 0), XStringFormats.TopRight);
                         gfx.DrawString($"Mobile: {viewModel.MobileNumber}", font, XBrushes.Black,
-                            new XRect(page.Width - 400, yMargin + 120, 300, 0), XStringFormats.TopRight);
+                            new XRect(page.Width - 420, yMargin + 120, 300, 0), XStringFormats.TopRight);
                         gfx.DrawString($"Email: {viewModel.EmailId}", font, XBrushes.Black,
-                            new XRect(page.Width - 400, yMargin + 140, 300, 0), XStringFormats.TopRight);
+                            new XRect(page.Width - 396, yMargin + 140, 300, 0), XStringFormats.TopRight);
 
                         // Add a horizontal line below the logo and user details
                         gfx.DrawLine(XPens.Black, xMargin, yMargin + 180, page.Width - xMargin, yMargin + 180);
@@ -302,7 +302,7 @@ public class OrderController : Controller
 
                         // Add total price aligned to the right side
                         gfx.DrawString($"Grand Total: ₹ {viewModel.Order.TotalPrice.ToString("N2")}", boldFont, XBrushes.Black,
-                            new XRect(page.Width - 400, yPosition + 20, 300, 0), XStringFormats.TopRight);
+                            new XRect(page.Width - 398, yPosition + 20, 300, 0), XStringFormats.TopRight);
                     }
 
                     document.Save(ms);
